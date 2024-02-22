@@ -14,6 +14,9 @@ export class CreateClientes1708474108645 implements MigrationInterface {
 
   public async down(queryRunner: QueryRunner): Promise<void> {
     await queryRunner.query(`
+        ALTER TABLE "clientes" DROP CONSTRAINT IF EXISTS "PK_idcliente"
+    `);
+    await queryRunner.query(`
             DROP TABLE IF EXISTS "clientes"
         `);
   }

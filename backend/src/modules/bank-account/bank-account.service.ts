@@ -1,10 +1,15 @@
-import { BadRequestException, Injectable } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { CreateBankAccountDto } from './dto/create-bank-account.dto';
-import { UpdateBankAccountDto } from './dto/update-bank-account.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { BankAccount } from './entities/bank-account.entity';
 import { Repository } from 'typeorm';
-import { ClientsService } from '../clients/clients.service';
+import { ClientsService } from '../client/clients.service';
+import { TransactionService } from '../transaction/transaction.service';
+import { UpdateStatusBankAccountDto } from './dto/update-bank-account.dto';
 
 @Injectable()
 export class BankAccountService {
@@ -13,6 +18,7 @@ export class BankAccountService {
     private bankAccountRepository: Repository<BankAccount>,
 
     private clientService: ClientsService,
+    private transactionService: TransactionService,
   ) {}
   async create(createBankAccountDto: CreateBankAccountDto) {
     let client = await this.clientService.findCpf(
@@ -59,11 +65,45 @@ export class BankAccountService {
     return `This action returns a #${id} bankAccount`;
   }
 
-  update(id: number, updateBankAccountDto: UpdateBankAccountDto) {
-    return `This action updates a #${id} bankAccount`;
+  async updateStatus(
+    id: string,
+    updateStatusBankAccountDto: UpdateStatusBankAccountDto,
+  ) {
+    const bankAccount = await this.bankAccountRepository.findOne({
+      where: {
+        id,
+      },
+    });
+    if (!bankAccount) {
+      throw new NotFoundException('Conta bancária não existe');
+    }
+
+    return await this.bankAccountRepository.update(id, {
+      ativo: updateStatusBankAccountDto.ativo,
+    });
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} bankAccount`;
+  async remove(id: string) {
+    const bankAccount = await this.bankAccountRepository.findOne({
+      where: {
+        id,
+      },
+    });
+
+    if (!bankAccount) {
+      throw new NotFoundException('Conta bancária não existe');
+    }
+
+    const transactions = await this.transactionService.findAllByBankAccount(
+      bankAccount.id,
+    );
+
+    if (transactions.length) {
+      throw new BadRequestException(
+        'Conta bancária possui transações e não pode ser excluída',
+      );
+    }
+
+    await this.bankAccountRepository.delete(id);
   }
 }

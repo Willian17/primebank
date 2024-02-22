@@ -1,8 +1,9 @@
 import { Module } from '@nestjs/common';
-import { ClientsModule } from './modules/clients/clients.module';
+import { ClientsModule } from './modules/client/clients.module';
 import { BankAccountModule } from './modules/bank-account/bank-account.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ConfigModule, ConfigService } from '@nestjs/config';
+import { TransactionModule } from './modules/transaction/transaction.module';
 import configuration from './config/configuration';
 
 @Module({
@@ -20,7 +21,6 @@ import configuration from './config/configuration';
           username: configService.get('database.user'),
           password: configService.get('database.password'),
           database: configService.get('database.name'),
-          synchronize: true,
           autoLoadEntities: true,
         };
       },
@@ -28,6 +28,7 @@ import configuration from './config/configuration';
     }),
     ClientsModule,
     BankAccountModule,
+    TransactionModule,
   ],
   controllers: [],
 })

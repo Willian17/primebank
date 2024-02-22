@@ -12,13 +12,19 @@ export class CreateContasBancarias1708542414102 implements MigrationInterface {
                 "ativo" boolean NOT NULL DEFAULT true,
                 "idCliente" varchar(60) NOT NULL,
                 CONSTRAINT "PK_idconta" PRIMARY KEY ("id"),
-                CONSTRAINT "FK_idcliente" FOREIGN KEY ("idCliente") REFERENCES "clientes" ("id")
+                CONSTRAINT "FK_idcliente" FOREIGN KEY ("idCliente") REFERENCES "clientes" ("id") ON DELETE CASCADE ON UPDATE CASCADE
             )`);
   }
 
   public async down(queryRunner: QueryRunner): Promise<void> {
     await queryRunner.query(`
-            DROP TABLE IF EXISTS "contas_bancarias"
+        ALTER TABLE "contasBancarias" DROP CONSTRAINT IF EXISTS "FK_idcliente"
+    `);
+    await queryRunner.query(`
+        ALTER TABLE "contasBancarias" DROP CONSTRAINT IF EXISTS "PK_idconta" 
+    `);
+    await queryRunner.query(`
+            DROP TABLE IF EXISTS "contasBancarias"
         `);
   }
 }

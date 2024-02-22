@@ -1,15 +1,20 @@
-import { Client } from 'src/modules/clients/entities/client.entity';
+import { Client } from 'src/modules/client/entities/client.entity';
+import { Transaction } from 'src/modules/transaction/entities/transaction.entity';
 import {
+  BeforeInsert,
   Column,
   Entity,
   JoinColumn,
   ManyToOne,
-  PrimaryGeneratedColumn,
+  OneToMany,
+  PrimaryColumn,
 } from 'typeorm';
+
+import { v4 as uuidv4 } from 'uuid';
 
 @Entity('contasBancarias')
 export class BankAccount {
-  @PrimaryGeneratedColumn('uuid')
+  @PrimaryColumn()
   id: string;
 
   @Column()
@@ -36,4 +41,12 @@ export class BankAccount {
   })
   @JoinColumn({ name: 'idCliente' })
   cliente: Client;
+
+  @OneToMany(() => Transaction, (transactions) => transactions.conta)
+  transacoes: Transaction[];
+
+  @BeforeInsert()
+  default() {
+    this.id = uuidv4();
+  }
 }

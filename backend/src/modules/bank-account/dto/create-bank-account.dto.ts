@@ -15,7 +15,7 @@ export class CreateBankAccountDto {
   agencia: string;
 
   @IsNotEmpty({ message: 'Conta não pode ser vazio' })
-  @Length(9, 9, { message: 'Conta precisa ter 9 digitos' })
+  @Length(8, 8, { message: 'Conta precisa ter 8 digitos' })
   conta: string;
 
   @IsNotEmpty({ message: 'Banco não pode ser vazio' })

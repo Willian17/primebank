@@ -9,7 +9,7 @@ import {
 } from '@nestjs/common';
 import { BankAccountService } from './bank-account.service';
 import { CreateBankAccountDto } from './dto/create-bank-account.dto';
-import { UpdateBankAccountDto } from './dto/update-bank-account.dto';
+import { UpdateStatusBankAccountDto } from './dto/update-bank-account.dto';
 
 @Controller('bank-account')
 export class BankAccountController {
@@ -30,16 +30,17 @@ export class BankAccountController {
     return this.bankAccountService.findOne(+id);
   }
 
-  @Patch(':id')
-  update(
+  @Patch('/status/:id')
+  async updateStatus(
     @Param('id') id: string,
-    @Body() updateBankAccountDto: UpdateBankAccountDto,
+    @Body() updateStatusBankAccountDto: UpdateStatusBankAccountDto,
   ) {
-    return this.bankAccountService.update(+id, updateBankAccountDto);
+    await this.bankAccountService.updateStatus(id, updateStatusBankAccountDto);
+    return;
   }
 
   @Delete(':id')
   remove(@Param('id') id: string) {
-    return this.bankAccountService.remove(+id);
+    return this.bankAccountService.remove(id);
   }
 }
