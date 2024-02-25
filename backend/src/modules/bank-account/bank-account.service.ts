@@ -57,12 +57,8 @@ export class BankAccountService {
 
   async findAll() {
     return await this.bankAccountRepository.find({
-      relations: ['cliente'],
+      relations: ['cliente', 'transacoes'],
     });
-  }
-
-  findOne(id: number) {
-    return `This action returns a #${id} bankAccount`;
   }
 
   async updateStatus(

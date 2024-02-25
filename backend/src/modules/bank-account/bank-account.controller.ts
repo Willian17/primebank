@@ -25,11 +25,6 @@ export class BankAccountController {
     return await this.bankAccountService.findAll();
   }
 
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.bankAccountService.findOne(+id);
-  }
-
   @Patch('/status/:id')
   async updateStatus(
     @Param('id') id: string,

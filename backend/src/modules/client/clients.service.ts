@@ -20,23 +20,7 @@ export class ClientsService {
     return await this.clientRepository.save(newClient);
   }
 
-  findAll() {
-    return `This action returns all clients`;
-  }
-
-  findOne(id: number) {
-    return `This action returns a #${id} client`;
-  }
-
   async findCpf(cpf: string) {
     return await this.clientRepository.findOne({ where: { cpf } });
-  }
-
-  update(id: number, updateClientDto: UpdateClientDto) {
-    return `This action updates a #${id} client`;
-  }
-
-  remove(id: number) {
-    return `This action removes a #${id} client`;
   }
 }
