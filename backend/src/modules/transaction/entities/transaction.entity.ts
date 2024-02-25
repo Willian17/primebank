@@ -9,13 +9,18 @@ import {
 import { v4 as uuidv4 } from 'uuid';
 import { TypeTransactionEnum } from '../enuns/TypeTransactionEnum';
 import { BankAccount } from 'src/modules/bank-account/entities/bank-account.entity';
+import { ColumnNumericTransformer } from 'src/modules/bank-account/transformer/ColumnNumericTransformer';
 
 @Entity('transacoes')
 export class Transaction {
   @PrimaryColumn()
   id: string;
 
-  @Column()
+  @Column('numeric', {
+    precision: 15,
+    scale: 2,
+    transformer: new ColumnNumericTransformer(),
+  })
   valor: number;
 
   @Column({
@@ -27,7 +32,11 @@ export class Transaction {
   @Column()
   data: Date;
 
-  @Column()
+  @Column('numeric', {
+    precision: 15,
+    scale: 2,
+    transformer: new ColumnNumericTransformer(),
+  })
   saldoAnterior: number;
 
   @Column({ foreignKeyConstraintName: 'FK_idconta', select: false })

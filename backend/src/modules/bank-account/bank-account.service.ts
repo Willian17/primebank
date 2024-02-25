@@ -1,7 +1,9 @@
 import {
   BadRequestException,
+  Inject,
   Injectable,
   NotFoundException,
+  forwardRef,
 } from '@nestjs/common';
 import { CreateBankAccountDto } from './dto/create-bank-account.dto';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -18,6 +20,8 @@ export class BankAccountService {
     private bankAccountRepository: Repository<BankAccount>,
 
     private clientService: ClientsService,
+
+    @Inject(forwardRef(() => TransactionService))
     private transactionService: TransactionService,
   ) {}
   async create(createBankAccountDto: CreateBankAccountDto) {
@@ -36,7 +40,6 @@ export class BankAccountService {
       where: {
         agencia: createBankAccountDto.agencia,
         conta: createBankAccountDto.conta,
-        banco: createBankAccountDto.banco,
       },
     });
 
@@ -101,5 +104,18 @@ export class BankAccountService {
     }
 
     await this.bankAccountRepository.delete(id);
+  }
+
+  async findOneAgenciaConta(agencia: string, conta: string) {
+    return await this.bankAccountRepository.findOne({
+      where: {
+        agencia,
+        conta,
+      },
+    });
+  }
+
+  async updateSaldo(id: string, saldo: number) {
+    return await this.bankAccountRepository.update({ id }, { saldo });
   }
 }

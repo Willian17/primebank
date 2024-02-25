@@ -1,22 +1,61 @@
-import { Injectable } from '@nestjs/common';
+import {
+  BadRequestException,
+  Inject,
+  Injectable,
+  NotFoundException,
+  forwardRef,
+} from '@nestjs/common';
 import { CreateTransactionDto } from './dto/create-transaction.dto';
-import { UpdateTransactionDto } from './dto/update-transaction.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Transaction } from './entities/transaction.entity';
+import { BankAccountService } from '../bank-account/bank-account.service';
+import { TypeTransactionEnum } from './enuns/TypeTransactionEnum';
 
 @Injectable()
 export class TransactionService {
   constructor(
     @InjectRepository(Transaction)
     private transactionRepository: Repository<Transaction>,
-  ) {}
-  create(createTransactionDto: CreateTransactionDto) {
-    return 'This action adds a new transaction';
-  }
 
-  findAll() {
-    return `This action returns all transaction`;
+    @Inject(forwardRef(() => BankAccountService))
+    private bankAccountService: BankAccountService,
+  ) {}
+  async create(createTransactionDto: CreateTransactionDto) {
+    const bankAccount = await this.bankAccountService.findOneAgenciaConta(
+      createTransactionDto.agencia,
+      createTransactionDto.conta,
+    );
+
+    if (!bankAccount) {
+      throw new NotFoundException('Conta bancária não existe');
+    }
+
+    if (!bankAccount.ativo) {
+      throw new BadRequestException('Conta bancária não ativa');
+    }
+
+    const transaction = this.transactionRepository.create({
+      valor: createTransactionDto.valor,
+      tipo: createTransactionDto.tipo,
+      data: new Date(), // refactor
+      saldoAnterior: bankAccount.saldo,
+      idConta: bankAccount.id,
+    });
+
+    await this.transactionRepository.save(transaction);
+
+    bankAccount.saldo =
+      createTransactionDto.tipo === TypeTransactionEnum.CREDITO
+        ? bankAccount.saldo + createTransactionDto.valor
+        : bankAccount.saldo - createTransactionDto.valor;
+
+    await this.bankAccountService.updateSaldo(
+      bankAccount.id,
+      bankAccount.saldo,
+    );
+
+    return transaction;
   }
 
   async findAllByBankAccount(id: string) {
@@ -25,17 +64,5 @@ export class TransactionService {
         idConta: id,
       },
     });
-  }
-
-  findOne(id: number) {
-    return `This action returns a #${id} transaction`;
-  }
-
-  update(id: number, updateTransactionDto: UpdateTransactionDto) {
-    return `This action updates a #${id} transaction`;
-  }
-
-  remove(id: number) {
-    return `This action removes a #${id} transaction`;
   }
 }

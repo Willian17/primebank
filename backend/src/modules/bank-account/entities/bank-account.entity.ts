@@ -11,6 +11,7 @@ import {
 } from 'typeorm';
 
 import { v4 as uuidv4 } from 'uuid';
+import { ColumnNumericTransformer } from '../transformer/ColumnNumericTransformer';
 
 @Entity('contasBancarias')
 export class BankAccount {
@@ -26,7 +27,11 @@ export class BankAccount {
   @Column()
   banco: string;
 
-  @Column()
+  @Column('numeric', {
+    precision: 15,
+    scale: 2,
+    transformer: new ColumnNumericTransformer(),
+  })
   saldo: number;
 
   @Column()

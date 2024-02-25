@@ -1,6 +1,7 @@
 import { Navigate, Route, Routes } from "react-router-dom";
 import BankAccount from "../pages/BankAccount";
 import CreateBankAccount from "../pages/CreateBankAccount";
+import Transaction from "../pages/Transaction";
 
 export default function Routers() {
   return (
@@ -12,6 +13,7 @@ export default function Routers() {
         path="/contas-bancarias/cadastro"
         element={<CreateBankAccount />}
       />
+      <Route path="/transacao" element={<Transaction />} />
     </Routes>
   );
 }

@@ -25,9 +25,9 @@ export function Sidebar() {
           tooltip="Contas Bancárias"
         />
         <NavItem
-          to="/transacoes"
+          to="/transacao"
           icon={<FaMoneyBillTransfer />}
-          tooltip="Transações"
+          tooltip="Realizar transação"
         />
         <NavItem
           to="/relatorio-consolidado"

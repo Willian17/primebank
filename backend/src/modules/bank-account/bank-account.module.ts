@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { Module, forwardRef } from '@nestjs/common';
 import { BankAccountService } from './bank-account.service';
 import { BankAccountController } from './bank-account.controller';
 import { ClientsModule } from '../client/clients.module';
@@ -11,8 +11,9 @@ import { TransactionModule } from '../transaction/transaction.module';
   providers: [BankAccountService],
   imports: [
     ClientsModule,
-    TransactionModule,
+    forwardRef(() => TransactionModule),
     TypeOrmModule.forFeature([BankAccount]),
   ],
+  exports: [BankAccountService],
 })
 export class BankAccountModule {}
