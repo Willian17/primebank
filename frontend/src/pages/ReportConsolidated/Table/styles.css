@@ -1,0 +1,21 @@
+table.table {
+    width: 100%;
+}
+
+table.table thead tr th {
+    padding: 1rem;
+}
+
+table.table tbody tr {
+    background-color: #fff;
+    border: 1px solid #dfe7ef;
+}
+
+table.table tbody tr td {
+    padding: 1rem;
+}
+
+table.table tbody tr.row-total {
+    background-color: #f7f7f7;
+    padding: 2rem;
+}

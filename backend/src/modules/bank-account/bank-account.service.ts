@@ -12,6 +12,7 @@ import { Repository } from 'typeorm';
 import { ClientsService } from '../client/clients.service';
 import { TransactionService } from '../transaction/transaction.service';
 import { UpdateStatusBankAccountDto } from './dto/update-bank-account.dto';
+import { ReportDBDto } from './dto/report-db-dto';
 
 @Injectable()
 export class BankAccountService {
@@ -117,5 +118,102 @@ export class BankAccountService {
 
   async updateSaldo(id: string, saldo: number) {
     return await this.bankAccountRepository.update({ id }, { saldo });
+  }
+
+  async findAllReportConsolidated(groupedBy: string) {
+    const reportData: ReportDBDto[] = await this.bankAccountRepository.query(
+      `SELECT  
+      clientes.nome  as "nomeCliente",
+      banco,
+      agencia, 
+      conta,
+      SUM(transacoes.valor) FILTER (WHERE transacoes.tipo = 'DEBITO') AS "totalDebito",
+      SUM(transacoes.valor) FILTER (WHERE transacoes.tipo = 'CREDITO') AS "totalCredito",
+      saldo as "saldoFinal",
+        (
+            SELECT "saldoAnterior"
+            FROM transacoes
+            WHERE "idConta" = contas.id
+            ORDER BY "data" ASC
+            LIMIT 1
+        ) AS "saldoAnterior" 
+    FROM "contasBancarias" contas
+    INNER JOIN
+      clientes on clientes.id = contas."idCliente"
+    LEFT JOIN 
+      "transacoes" ON transacoes."idConta" = contas.id
+    GROUP BY clientes.nome, banco, agencia, conta, contas.saldo, contas.id;`,
+    );
+
+    const groupedReport = Object.values(
+      reportData.reduce((reports, bankAccount) => {
+        let key;
+        let filterCallback;
+        switch (groupedBy.toUpperCase()) {
+          case 'BANCO':
+            key = bankAccount.banco;
+            filterCallback = (item: ReportDBDto) =>
+              item.banco === bankAccount.banco;
+            break;
+          case 'CONTA':
+            key = bankAccount.conta;
+            filterCallback = (item: ReportDBDto) =>
+              item.conta === bankAccount.conta;
+            break;
+          case 'CLIENTE':
+            key = bankAccount.nomeCliente;
+            filterCallback = (item: ReportDBDto) =>
+              item.nomeCliente === bankAccount.nomeCliente;
+            break;
+          default:
+            key = bankAccount.banco;
+            filterCallback = (item: ReportDBDto) =>
+              item.banco === bankAccount.banco;
+        }
+
+        if (!reports[key]) {
+          const saldoAnterior = reportData
+            .filter(filterCallback)
+            .reduce((total, item) => +total + +item.saldoAnterior, 0);
+
+          const totalDebito = reportData
+            .filter(filterCallback)
+            .reduce((total, item) => +total + +item.totalDebito, 0);
+
+          const totalCredito = reportData
+            .filter(filterCallback)
+            .reduce((total, item) => +total + +item.totalCredito, 0);
+
+          const saldoFinal = reportData
+            .filter(filterCallback)
+            .reduce((total, item) => +total + +item.saldoFinal, 0);
+
+          reports[key] = {
+            name: key,
+            totalDebito,
+            totalCredito,
+            saldoFinal,
+            saldoAnterior,
+            contasBancarias: [],
+          };
+        }
+
+        reports[key].contasBancarias.push({
+          nomeCliente: bankAccount.nomeCliente,
+          banco: bankAccount.banco,
+          conta: bankAccount.conta,
+          totalDebito: +bankAccount.totalDebito || 0,
+          totalCredito: +bankAccount.totalCredito || 0,
+          saldoFinal: +bankAccount.saldoFinal || 0,
+          saldoAnterior:
+            bankAccount.saldoAnterior == null
+              ? +bankAccount.saldoFinal
+              : +bankAccount.saldoAnterior,
+        });
+        return reports;
+      }, {}),
+    );
+
+    return groupedReport;
   }
 }

@@ -6,6 +6,7 @@ import {
   Patch,
   Param,
   Delete,
+  Query,
 } from '@nestjs/common';
 import { BankAccountService } from './bank-account.service';
 import { CreateBankAccountDto } from './dto/create-bank-account.dto';
@@ -23,6 +24,11 @@ export class BankAccountController {
   @Get()
   async findAll() {
     return await this.bankAccountService.findAll();
+  }
+
+  @Get('/report-consolidated')
+  async findAllReportConsolidated(@Query('group') groupedBy: string) {
+    return await this.bankAccountService.findAllReportConsolidated(groupedBy);
   }
 
   @Patch('/status/:id')
