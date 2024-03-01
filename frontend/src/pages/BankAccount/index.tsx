@@ -13,7 +13,7 @@ export default function BankAccount() {
       <div className="flex justify-end mb-4 rounded-lg">
         <Button
           label="Cadastrar"
-          className="px-6"
+          className="px-6 transition ease-in-out delay-150 hover:-translate-y-1 hover:scale-110 hover:bg-indigo-500 duration-300"
           onClick={handleNavigateCreateBankAccount}
         />
       </div>

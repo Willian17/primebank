@@ -118,8 +118,12 @@ export default function CreateBankAccount() {
             onValueChange={handleChange}
             required
           />
+          <Button
+            label="Cadastrar"
+            className="mt-4 px-6 transition ease-in-out delay-150 hover:-translate-y-1 hover:scale-110 hover:bg-indigo-500 duration-300"
+            type="submit"
+          />
         </div>
-        <Button label="Cadastrar" className="mt-4 px-6" type="submit" />
       </form>
 
       <Toast ref={toast} />
