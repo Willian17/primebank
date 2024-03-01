@@ -56,6 +56,11 @@
   ```
   ### Configuração
   copiar arquivo .env.example na raiz do projeto, colar com o nome .env. Preencher os dados de conexão com o banco postgreSQL
+
+  ### Executar migrations SQL
+  ```
+  $ npm run migration:run
+  ```
   
   ### Executar Aplicação
   ```
