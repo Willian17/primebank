@@ -37,7 +37,7 @@ export default function ListExtract({
         className="col-12 flex p-6 border border-surface-300"
         key={extract.id}
       >
-        <div className="flex flex-col justify-center font-semibold mr-2">
+        <div className="flex flex-col justify-center font-semibold mr-4">
           <span className="text-xl">
             {moment(extract.data).locale("pt-br").format("DD")}
           </span>

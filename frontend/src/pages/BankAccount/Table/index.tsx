@@ -89,7 +89,10 @@ export default function Table() {
 
   return (
     <>
-      <DataTable value={bankAccounts}>
+      <DataTable
+        value={bankAccounts}
+        emptyMessage="Nenhuma conta bancária registrada"
+      >
         <Column field="cliente.nome" header="Nome cliente"></Column>
         <Column field="banco" header="Banco"></Column>
         <Column field="agencia" header="Agencia"></Column>
