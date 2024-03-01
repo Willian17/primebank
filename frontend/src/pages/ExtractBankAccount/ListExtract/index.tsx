@@ -18,7 +18,7 @@ export default function ListExtract({
       : +lastExtract.saldoAnterior - +lastExtract.valor;
     return saldoFinal.toFixed(2);
   }
-  const getSeverity = (tipo: TypeTransactionEnum) => {
+  function getSeverity(tipo: TypeTransactionEnum) {
     switch (tipo) {
       case TypeTransactionEnum.DEBITO:
         return "danger";
@@ -29,7 +29,7 @@ export default function ListExtract({
       default:
         return null;
     }
-  };
+  }
 
   function itemTemplate(extract: ListExtractsDto) {
     return (

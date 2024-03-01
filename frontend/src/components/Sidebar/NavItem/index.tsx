@@ -1,7 +1,6 @@
 import { Button } from "primereact/button";
 import { IconContext } from "react-icons";
 import { NavLink, useLocation } from "react-router-dom";
-import { classNames } from "primereact/utils";
 
 interface Props {
   to: string;

@@ -42,7 +42,7 @@ export default function Table() {
     await getBankAccounts();
   }
 
-  const confirmDialogDelete = (bankAccount: BankAccountListDto) => {
+  function confirmDialogDelete(bankAccount: BankAccountListDto) {
     confirmDialog({
       message: "Voce tem certeza que deseja excluir esta conta bancária?",
       header: "Confirmação",
@@ -55,7 +55,7 @@ export default function Table() {
         handleDeleteBankAccount(bankAccount);
       },
     });
-  };
+  }
 
   async function handleDeleteBankAccount(bankAccount: BankAccountListDto) {
     await api.delete(`/bank-account/${bankAccount.id}`);
