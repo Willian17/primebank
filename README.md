@@ -71,6 +71,8 @@
   ```
   ### Configuração
   copiar arquivo .env.example na raiz do projeto, colar com o nome .env. Preencher os dados em relação a API
+
+  ### Executar Aplicação
    ```
   $ npm start
   ```
