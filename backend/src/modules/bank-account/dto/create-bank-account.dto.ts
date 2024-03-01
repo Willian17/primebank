@@ -1,17 +1,8 @@
-import {
-  IsEmail,
-  IsEmpty,
-  IsNotEmpty,
-  IsNumber,
-  Length,
-  MaxLength,
-  Min,
-  maxLength,
-} from 'class-validator';
+import { IsNotEmpty, IsNumber, Length, Min } from 'class-validator';
 
 export class CreateBankAccountDto {
   @IsNotEmpty({ message: 'Agencia não pode ser vazio' })
-  @Length(4, 4, { message: 'Agencia precisa ter 4 digitos' })
+  @Length(3, 4, { message: 'Agencia precisa ter 3-4 digitos' })
   agencia: string;
 
   @IsNotEmpty({ message: 'Conta não pode ser vazio' })

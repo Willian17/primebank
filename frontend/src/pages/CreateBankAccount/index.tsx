@@ -1,4 +1,4 @@
-import { useState, useRef } from "react";
+import { useState, useRef, FormEvent } from "react";
 import { Button } from "primereact/button";
 import api from "../../config/api";
 import InputTextLabel from "../../components/InputTextLabel";
@@ -37,7 +37,8 @@ export default function CreateBankAccount() {
     }));
   }
 
-  async function handleSubmit() {
+  async function handleSubmit(e: FormEvent<HTMLFormElement>) {
+    e.preventDefault();
     try {
       await api.post("/bank-account", formData);
       navigate("/contas-bancarias");
@@ -63,60 +64,63 @@ export default function CreateBankAccount() {
   return (
     <div className="p-8 mt-10">
       <h1 className="text-3xl font-bold mb-4">Criar Conta bancária</h1>
-      <div className="grid grid-cols-2 gap-4">
-        <InputTextLabel
-          label="Nome do Cliente"
-          value={formData.nomeCliente}
-          id="nomeCliente"
-          onChange={handleChange}
-          required
-        />
-        <InputMaskLabel
-          label="CPF do cliente"
-          id="cpfCliente"
-          onChange={handleChange}
-          value={formData.cpfCliente}
-          mask="999.999.999-99"
-          required
-        />
-        <InputMaskLabel
-          label="Agencia"
-          id="agencia"
-          onChange={handleChange}
-          value={formData.agencia}
-          mask="9999"
-          required
-        />
-        <InputMaskLabel
-          label="Número da Conta"
-          id="conta"
-          onChange={handleChange}
-          value={formData.conta}
-          mask="9999999-9"
-          required
-        />
-        <DropdownLabel
-          id="banco"
-          label="Banco"
-          value={formData.banco}
-          options={bancos}
-          optionLabel="label"
-          onChange={handleDropdownChange}
-          placeholder="Selecione o Banco"
-          required
-        />
-        <InputNumberLabel
-          label="Saldo Inicial"
-          id="saldoicial"
-          mode="currency"
-          currency="BRL"
-          locale="pt-BR"
-          value={formData.saldo}
-          onValueChange={handleChange}
-          required
-        />
-      </div>
-      <Button label="Cadastrar" className="mt-4 px-6" onClick={handleSubmit} />
+      <form onSubmit={handleSubmit}>
+        <div className="grid grid-cols-2 gap-4">
+          <InputTextLabel
+            label="Nome do Cliente"
+            value={formData.nomeCliente}
+            id="nomeCliente"
+            onChange={handleChange}
+            required
+          />
+          <InputMaskLabel
+            label="CPF do cliente"
+            id="cpfCliente"
+            onChange={handleChange}
+            value={formData.cpfCliente}
+            mask="999.999.999-99"
+            required
+          />
+          <InputTextLabel
+            label="Agencia"
+            id="agencia"
+            onChange={handleChange}
+            value={formData.agencia}
+            maxLength={4}
+            minLength={3}
+            required
+          />
+          <InputMaskLabel
+            label="Número da Conta"
+            id="conta"
+            onChange={handleChange}
+            value={formData.conta}
+            mask="9999999-9"
+            required
+          />
+          <DropdownLabel
+            id="banco"
+            label="Banco"
+            value={formData.banco}
+            options={bancos}
+            optionLabel="label"
+            onChange={handleDropdownChange}
+            placeholder="Selecione o Banco"
+            required
+          />
+          <InputNumberLabel
+            label="Saldo Inicial"
+            id="saldoicial"
+            mode="currency"
+            currency="BRL"
+            locale="pt-BR"
+            value={formData.saldo}
+            onValueChange={handleChange}
+            required
+          />
+        </div>
+        <Button label="Cadastrar" className="mt-4 px-6" type="submit" />
+      </form>
 
       <Toast ref={toast} />
     </div>

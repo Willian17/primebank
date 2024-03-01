@@ -67,7 +67,7 @@ export default function ExtractBankAccount() {
           onChange={handleChange}
           value={formData.agencia}
           maxLength={4}
-          minLength={2}
+          minLength={3}
           required
         />
         <InputMaskLabel

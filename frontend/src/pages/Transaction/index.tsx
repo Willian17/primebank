@@ -7,6 +7,7 @@ import DropdownLabel from "../../components/DropdownLabel";
 import InputNumberLabel from "../../components/InputNumberLabel";
 import { SelectItem } from "primereact/selectitem";
 import { TypeTransactionEnum } from "./enum/TypeTransactionEnum";
+import InputTextLabel from "../../components/InputTextLabel";
 
 export default function Transaction() {
   const [formData, setFormData] = useState({
@@ -87,12 +88,13 @@ export default function Transaction() {
     <div className="p-8 mt-10">
       <h1 className="text-3xl font-bold mb-4">Realizar transação</h1>
       <form className="grid grid-cols-2 gap-4" onSubmit={handleSubmit}>
-        <InputMaskLabel
+        <InputTextLabel
           label="Agencia"
           id="agencia"
           onChange={handleChange}
           value={formData.agencia}
-          mask="9999"
+          maxLength={4}
+          minLength={3}
           required
         />
         <InputMaskLabel
