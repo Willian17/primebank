@@ -113,6 +113,15 @@ export class BankAccountService {
         agencia,
         conta,
       },
+      select: [
+        'id',
+        'agencia',
+        'conta',
+        'ativo',
+        'banco',
+        'idCliente',
+        'saldo',
+      ],
     });
   }
 

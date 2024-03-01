@@ -34,11 +34,7 @@ export function Sidebar() {
           icon={<FaChartSimple />}
           tooltip="Relatório Consolidado"
         />
-        <NavItem
-          to="/extrato-conta-bancaria"
-          icon={<FaReceipt />}
-          tooltip="Extrato"
-        />
+        <NavItem to="/extrato" icon={<FaReceipt />} tooltip="Extrato" />
       </div>
     </menu>
   );

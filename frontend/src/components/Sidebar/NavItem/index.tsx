@@ -9,15 +9,10 @@ interface Props {
 }
 
 export default function NavItem({ to, icon, tooltip }: Props) {
-  function isCurrentPage(router: string) {
-    return window.location.pathname === router;
-  }
-
   return (
     <NavLink to={to}>
       <Button
         className="p-button-text p-button-icon-only"
-        raised={isCurrentPage(to)}
         icon={
           <IconContext.Provider value={{ size: "25", color: "#5D7285" }}>
             {icon}

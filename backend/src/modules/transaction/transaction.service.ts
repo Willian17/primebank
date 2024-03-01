@@ -65,4 +65,61 @@ export class TransactionService {
       },
     });
   }
+
+  async reportExtract(
+    agencia: string,
+    conta: string,
+    dataStart: string,
+    dataEnd: string,
+  ) {
+    const bankAccount = await this.bankAccountService.findOneAgenciaConta(
+      agencia,
+      conta,
+    );
+
+    if (!bankAccount) {
+      throw new NotFoundException('Conta bancária não existe');
+    }
+
+    if (!dataStart || !dataEnd) {
+      return await this.transactionRepository.query(
+        `SELECT
+          transacoes.id as id,
+          valor,
+          tipo,
+          data,
+          clientes.nome as "nomeCliente",
+          "saldoAnterior"
+        FROM
+          transacoes
+        INNER JOIN
+          clientes ON clientes.id = '${bankAccount.idCliente}'
+        WHERE
+          "idConta" = '${bankAccount.id}'
+        AND
+          "data" >= CURRENT_TIMESTAMP - INTERVAL '30 days' AND "data" <= CURRENT_TIMESTAMP;`,
+      );
+    }
+
+    dataStart = dataStart.concat(' 00:00:00');
+    dataEnd = dataEnd.concat(' 23:59:59');
+
+    return await this.transactionRepository.query(
+      `SELECT
+        transacoes.id as id,
+        valor,
+        tipo,
+        data,
+        clientes.nome as "nomeCliente",
+        "saldoAnterior"
+      FROM
+        transacoes
+      INNER JOIN
+        clientes ON clientes.id = '${bankAccount.idCliente}'
+      WHERE
+        "idConta" = '${bankAccount.id}'
+      AND
+        data BETWEEN '${dataStart}' AND '${dataEnd}';`,
+    );
+  }
 }

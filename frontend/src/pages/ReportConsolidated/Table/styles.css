@@ -1,14 +1,18 @@
 table.table {
     width: 100%;
+    font-family: var(--font-family);
+
 }
 
 table.table thead tr th {
     padding: 1rem;
+    background-color: #eff3f8;
 }
 
 table.table tbody tr {
     background-color: #fff;
     border: 1px solid #dfe7ef;
+    color: #043d75;
 }
 
 table.table tbody tr td {

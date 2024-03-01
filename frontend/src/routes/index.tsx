@@ -3,6 +3,7 @@ import BankAccount from "../pages/BankAccount";
 import CreateBankAccount from "../pages/CreateBankAccount";
 import Transaction from "../pages/Transaction";
 import ReportConsolidated from "../pages/ReportConsolidated";
+import ExtractBankAccount from "../pages/ExtractBankAccount";
 
 export default function Routers() {
   return (
@@ -16,6 +17,7 @@ export default function Routers() {
       />
       <Route path="/transacao" element={<Transaction />} />
       <Route path="/relatorio-consolidado" element={<ReportConsolidated />} />
+      <Route path="/extrato" element={<ExtractBankAccount />} />
     </Routes>
   );
 }
