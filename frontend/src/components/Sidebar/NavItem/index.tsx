@@ -1,6 +1,7 @@
 import { Button } from "primereact/button";
 import { IconContext } from "react-icons";
-import { NavLink } from "react-router-dom";
+import { NavLink, useLocation } from "react-router-dom";
+import { classNames } from "primereact/utils";
 
 interface Props {
   to: string;
@@ -9,10 +10,16 @@ interface Props {
 }
 
 export default function NavItem({ to, icon, tooltip }: Props) {
+  const location = useLocation();
+
+  function isMenuActived() {
+    return location.pathname === to;
+  }
   return (
     <NavLink to={to}>
       <Button
-        className="p-button-text p-button-icon-only"
+        raised={isMenuActived()}
+        className={"p-button-text p-button-icon-only"}
         icon={
           <IconContext.Provider value={{ size: "25", color: "#5D7285" }}>
             {icon}
